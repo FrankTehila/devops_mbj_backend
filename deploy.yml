@@ -1,0 +1,24 @@
+name: Deploy to GCP
+
+on:
+  push:
+    branches:
+      - main  # או את שם הסניף שלך
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up Cloud SDK
+      uses: GoogleCloudPlatform/github-actions/setup-gcloud@v0.2.0
+      with:
+        service_account_key: ${{ secrets.GCP_SA_KEY }}
+        project_id: your-project-id
+        export_default_credentials: true
+
+    - name: Deploy to Compute Engine
+      run: |
+        gcloud compute ssh your-vm-name --zone your-zone --command "cd /path/to/your/app && git pull origin main"
